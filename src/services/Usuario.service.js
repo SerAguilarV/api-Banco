@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 let _ModelUsuario = null
 
 class ServiceUsuario{
@@ -6,8 +7,21 @@ class ServiceUsuario{
     }
 
     async getInfo(id){
-        let usuario = await _ModelUsuario.findById(id);
-        return usuario
+        let usuario = await _ModelUsuario.aggregate([
+            {$match:{_id:mongoose.Types.ObjectId(id)}},
+            {"$lookup": {
+                from: "Datos_Usuarios",
+                localField: "ID",
+                foreignField: "ID",
+                as: "Datos"
+            }},
+            {"$unwind":"$Datos"},
+            {"$project" : {
+                "Datos._id" : 0,
+                "Datos.ID" : 0,
+                "_id":0}}
+    ]);
+        return usuario[0]
 
     }
 
@@ -27,6 +41,38 @@ class ServiceUsuario{
             const usuarios = await _ModelUsuario.find({},{ SUELDO: false, _id: false});
             return usuarios
         }
+    }
+
+    async search(cadena){
+        const usuario = await _ModelUsuario.aggregate([
+            {"$lookup": {
+                from: "Datos_Usuarios",
+                localField: "ID",
+                foreignField: "ID",
+                as: "Datos"
+            }},
+            {"$unwind":"$Datos"},
+            {"$project" : {
+                "Datos.NOMBRE" : 1,
+                "Datos.NombreL" : { $toLower: "$Datos.NOMBRE" },
+                "Datos.APELLIDOS" : 1,
+                "Datos.APELLIDOSL" : { $toLower: "$Datos.APELLIDOS" },  
+                "ID":1,
+                "_id":0
+            }},
+            {"$match":{ "$or" : [
+                {"ID" : {"$regex":cadena}},
+                {"Datos.NombreL": {"$regex":cadena}},
+                {"Datos.APELLIDOSL": {"$regex":cadena}}
+                ]}
+            },
+            {"$project" : {
+                "Datos.NombreL" : 0,
+                "Datos.APELLIDOSL" : 0,
+            }},
+        ]);
+        return usuario
+
     }
 }
 
