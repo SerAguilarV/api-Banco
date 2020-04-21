@@ -24,6 +24,12 @@ class UsuarioController{
         const usuarios = await _ServiceUsuarios.getAll(nivel)
         return res.send(usuarios)
     }
+
+    async search(req, res){
+        const {cadena} = req.query
+        const usuarios = await _ServiceUsuarios.search(cadena.toLowerCase())
+        return res.send(usuarios)
+    }
     
 }
 
