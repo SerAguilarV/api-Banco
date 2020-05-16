@@ -10,6 +10,6 @@ const mongoose = require("mongoose")
 
 // mongoose.set("userCreateIndex",true)
 mongoose.connect(MONGO_URI, 
-    {useNewUrlParser: true})
+    {useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true})
     .then(()=>Server.start())
     .catch(console.log)
