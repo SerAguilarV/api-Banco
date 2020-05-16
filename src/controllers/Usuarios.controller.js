@@ -30,7 +30,13 @@ class UsuarioController{
         const usuarios = await _ServiceUsuarios.search(cadena.toLowerCase())
         return res.send(usuarios)
     }
-    
+
+    async update(req, res){
+        const {body} = req
+        const {IDBanco} =  req.params
+        const updatedUser = await _ServiceUsuarios.update(IDBanco, body)
+        return res.send(updatedUser)
+    }
 }
 
 module.exports = UsuarioController

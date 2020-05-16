@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 let _ModelUsuario = null
+let _usuario = null
+
 
 class ServiceUsuario{
     constructor({ModeloUsuarios}){
@@ -26,19 +28,18 @@ class ServiceUsuario{
     }
 
     async getIDBanco(idBanco){
-        const usuario = await _ModelUsuario.findOne({"ID":idBanco},{ SUELDO: false, _id: false});
+        const usuario = await _ModelUsuario.findOne({"ID":idBanco},{});
         return usuario
 
     }
 
     async getAll(nivel){
-       
         if (nivel){
             const usuarios = await _ModelUsuario.find({NIVEL:nivel},{ SUELDO: false, _id: false});
             return usuarios
         }
         else{
-            const usuarios = await _ModelUsuario.find({},{ SUELDO: false, _id: false});
+            const usuarios = await _ModelUsuario.find({},{ SUELDO: false});
             return usuarios
         }
     }
@@ -56,7 +57,7 @@ class ServiceUsuario{
                 "Datos.NOMBRE" : 1,
                 "Datos.NombreL" : { $toLower: "$Datos.NOMBRE" },
                 "Datos.APELLIDOS" : 1,
-                "Datos.APELLIDOSL" : { $toLower: "$Datos.APELLIDOS" },  
+                "Datos.APELLIDOSL" : { $toLower: "$Datos.APELLIDOS" },
                 "ID":1,
                 "_id":0
             }},
@@ -73,6 +74,20 @@ class ServiceUsuario{
         ]);
         return usuario
 
+    }
+
+    async update (id, entity){
+        return await _ModelUsuario.findById(id, function (err, doc) {
+            Object.keys(entity).forEach((element)=>{
+                if(entity != "_id"){
+                    console.log(element)
+                    doc[element] = entity[element] 
+                }})
+            doc.save(function(err){
+                console.log("Error al guardar")
+                console.log(err)
+        })
+        })
     }
 }
 
