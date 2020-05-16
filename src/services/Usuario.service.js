@@ -84,9 +84,10 @@ class ServiceUsuario{
                     doc[element] = entity[element] 
                 }})
             doc.save(function(err){
-                console.log("Error al guardar")
-                console.log(err)
-        })
+                if (err){
+                    console.log("Error al guardar: " + err)
+                }
+            })
         })
     }
 }
