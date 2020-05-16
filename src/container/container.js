@@ -10,13 +10,13 @@ const ServerBanco = require(".")
 const {ModeloUsuarios} = require("../models")
 
 // Export service
-const {UsuarioService} = require("../services")
+const {UsuarioService, AuthService} = require("../services")
 
 // Export Controllers
-const {ControllerUsuario} = require("../controllers")
+const {ControllerUsuario,AuthController} = require("../controllers")
 
 // Export Routes
-const {RoutesUsuarios} = require("../routes/index.routes")
+const {RoutesUsuarios,RoutesAuth} = require("../routes/index.routes")
 
 //Export RouterFunction
 const RutasFunction = require("../routes")
@@ -30,15 +30,18 @@ container.register({
 }) 
 // Services
 .register({
-    UsuarioService: asClass(UsuarioService).singleton()
+    UsuarioService: asClass(UsuarioService).singleton(),
+    AuthService : asClass(AuthService).singleton()
 })
 // Controllers
 .register({
-    ControllerUsuario: asClass(ControllerUsuario).singleton()
+    ControllerUsuario: asClass(ControllerUsuario).singleton(),
+    AuthController : asClass(AuthController).singleton()
 })
 // Routes
 .register({
-    RoutesUsuarios: asClass(RoutesUsuarios).singleton()
+    RoutesUsuarios: asClass(RoutesUsuarios).singleton(),
+    RoutesAuth : asClass(RoutesAuth).singleton()
 })
 // Environment Variables and Server
 .register({

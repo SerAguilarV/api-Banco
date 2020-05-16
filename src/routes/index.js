@@ -3,8 +3,9 @@ const cors = require("cors")
 const helmet = require("helmet")
 const compression = require("compression")
 require("express-async-errors")
+const {ErrorMiddleware} = require("../middlewares")
 
-function RutasFunction({RoutesUsuarios}){
+function RutasFunction({RoutesUsuarios, RoutesAuth }){
     const router = express.Router()
     const apiRoutes = express.Router()
     apiRoutes.use(express.json())
@@ -13,8 +14,10 @@ function RutasFunction({RoutesUsuarios}){
         .use(compression())
 
     apiRoutes.use("/usuarios", RoutesUsuarios)
+    apiRoutes.use("/usuarios", RoutesAuth)
     // concat the url 
     router.use("/api/banco", apiRoutes)
+    router.use(ErrorMiddleware)
     return router
 }
 
