@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
             error.status = 401
             throw error
         }
-        req.user = decodedToken.user
+        req.user = decodedToken.userToEncode
         next()
     })
 
