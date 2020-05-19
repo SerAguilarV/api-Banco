@@ -25,7 +25,7 @@ class AuthService{
         const validPassword = await userExist.CheckPass(password)
         if (validPassword["NewPass"]){
             const token = sign({userToEncode}, JWT_SECRET, {expiresIn: "4h"})
-            return {token, newPass:true}
+            return {token, newPass:true, _id:userExist._id}
         } else if(!validPassword["Valid"]){
             const error = new Error()
             error.status = 400
@@ -33,7 +33,7 @@ class AuthService{
             throw error
         }
         const token = sign({userToEncode}, JWT_SECRET, {expiresIn: "4h"})
-        return {token, user: userExist}
+        return {token, user: userToEncode}
     }
 
 
