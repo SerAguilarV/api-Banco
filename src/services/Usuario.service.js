@@ -21,7 +21,7 @@ class ServiceUsuario{
             {"$project" : {
                 "Datos._id" : 0,
                 "Datos.ID" : 0,
-                "_id":0}}
+                "_id":1}}
     ]);
         return usuario[0]
 
@@ -33,18 +33,24 @@ class ServiceUsuario{
 
     }
 
-    async getAll(nivel){
+    async getAll(nivel, page){
+        if(!page){
+            page = 1;
+        }
         if (nivel){
-            const usuarios = await _ModelUsuario.find({NIVEL:nivel},{ SUELDO: false, _id: false});
+            const usuarios = await _ModelUsuario.find({NIVEL:nivel},{ SUELDO: false}).skip((page-1)*5).limit(5);
             return usuarios
         }
         else{
-            const usuarios = await _ModelUsuario.find({},{ SUELDO: false});
+            const usuarios = await _ModelUsuario.find({},{ SUELDO: false}).skip((page-1)*5).limit(5);
             return usuarios
         }
     }
 
-    async search(cadena){
+    async search(cadena, nivel, page){
+        if(!page){
+            page = 1;
+        }
         const usuario = await _ModelUsuario.aggregate([
             {"$lookup": {
                 from: "Datos_Usuarios",
@@ -59,7 +65,7 @@ class ServiceUsuario{
                 "Datos.APELLIDOS" : 1,
                 "Datos.APELLIDOSL" : { $toLower: "$Datos.APELLIDOS" },
                 "ID":1,
-                "_id":0
+                "_id":1
             }},
             {"$match":{ "$or" : [
                 {"ID" : {"$regex":cadena}},
@@ -71,9 +77,8 @@ class ServiceUsuario{
                 "Datos.NombreL" : 0,
                 "Datos.APELLIDOSL" : 0,
             }},
-        ]);
-        return usuario
-
+        ])
+        return {"Total" :  usuario.length, "Usuarios":usuario.slice((page-1)*5, (page-1)*5 +5)}
     }
 
     async update (id, entity){
