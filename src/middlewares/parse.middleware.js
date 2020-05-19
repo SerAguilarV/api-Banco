@@ -1,3 +1,5 @@
+
+// Parsea a enteros los querys del req, excepto el de longitud mayor a 20, que son ids de Mongo
 module.exports = function(req, res, next){
     const queryStrings = req.query;
     for(const key in queryStrings){
