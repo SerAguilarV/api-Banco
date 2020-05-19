@@ -33,8 +33,8 @@ class UsuarioController{
 
     async update(req, res){
         const {body} = req
-        const {IDBanco} =  req.params
-        const updatedUser = await _ServiceUsuarios.update(IDBanco, body)
+        const {idMongo} =  req.params
+        const updatedUser = await _ServiceUsuarios.update(idMongo, body)
         return res.send(updatedUser)
     }
 }

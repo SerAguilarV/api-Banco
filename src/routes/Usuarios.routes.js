@@ -6,6 +6,6 @@ module.exports = function RouterUsuario({ControllerUsuario}){
     router.get("/:idmongo/IDBanco", ControllerUsuario.get_ID)
     router.get("/allusers", ControllerUsuario.getAll)
     router.get("/search", ControllerUsuario.search)
-    router.patch("/:IDBanco", [AuthMiddleware, ParseMiddleware] ,ControllerUsuario.update)
+    router.patch("/:idMongo", [AuthMiddleware, ParseMiddleware] ,ControllerUsuario.update)
     return router
 }
