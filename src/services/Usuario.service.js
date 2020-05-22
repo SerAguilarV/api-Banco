@@ -65,7 +65,9 @@ class ServiceUsuario{
                 "Datos.APELLIDOS" : 1,
                 "Datos.APELLIDOSL" : { $toLower: "$Datos.APELLIDOS" },
                 "ID":1,
-                "_id":1
+                "_id":1,
+                "NIVEL" : 1,
+                "Datos.GENERO" : 1
             }},
             {"$match":{ "$or" : [
                 {"ID" : {"$regex":cadena}},
